@@ -10,7 +10,9 @@ import { dirname, join } from 'node:path';
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
 // El archivo de la base de datos vive junto a este módulo (backend/src/db/clinica.sqlite)
-const DB_PATH = join(__dirname, 'clinica.sqlite');
+// por defecto. En producción se puede apuntar a un disco persistente (ej. un volumen
+// de Railway montado en /data) seteando la variable de entorno DB_PATH.
+const DB_PATH = process.env.DB_PATH || join(__dirname, 'clinica.sqlite');
 
 const db = new Database(DB_PATH);
 

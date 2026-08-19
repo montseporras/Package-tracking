@@ -1,8 +1,15 @@
 // Punto de entrada de la API de Clínica Mottura.
 import express from 'express';
 import cors from 'cors';
+import { fileURLToPath } from 'node:url';
+import { dirname, join } from 'node:path';
 import pedidosRouter from './routes/pedidos.js';
 import { ESTADOS, PAISES, MONEDAS } from './utils/constants.js';
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
+// Build del frontend (generado con `npm run build` en frontend/). Si existe,
+// este mismo servidor lo sirve junto con la API, así se despliega como un solo servicio.
+const FRONTEND_DIST = join(__dirname, '..', '..', 'frontend', 'dist');
 
 const app = express();
 const PORT = process.env.PORT || 4000;
@@ -11,6 +18,7 @@ const CORS_ORIGIN = process.env.CORS_ORIGIN || 'http://localhost:5173';
 // --- Middlewares globales ---
 app.use(cors({ origin: CORS_ORIGIN }));
 app.use(express.json({ limit: '1mb' })); // límite de payload: evita abusos
+app.use(express.static(FRONTEND_DIST));
 
 // --- Rutas ---
 app.get('/api/health', (_req, res) => res.json({ ok: true, servicio: 'clinica-mottura' }));
@@ -20,7 +28,15 @@ app.get('/api/meta', (_req, res) => res.json({ estados: ESTADOS, paises: PAISES,
 
 app.use('/api/pedidos', pedidosRouter);
 
-// --- 404 ---
+// --- Fallback SPA: cualquier ruta que no sea /api sirve el index.html del frontend ---
+// (permite refrescar rutas como /pedidos/5 directo en el navegador).
+app.get(/^(?!\/api).*/, (_req, res, next) => {
+  res.sendFile(join(FRONTEND_DIST, 'index.html'), (err) => {
+    if (err) next();
+  });
+});
+
+// --- 404 (rutas /api no encontradas) ---
 app.use((req, res) => res.status(404).json({ error: 'Ruta no encontrada' }));
 
 // --- Manejador de errores central ---

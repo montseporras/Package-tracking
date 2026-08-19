@@ -1,0 +1,13 @@
+{
+  "name": "clinica-mottura",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Deploy raíz: instala y builda frontend+backend, y arranca el servidor único (API + estáticos).",
+  "scripts": {
+    "build": "npm install --prefix backend && npm install --prefix frontend && npm run build --prefix frontend",
+    "start": "npm start --prefix backend"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

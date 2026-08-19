@@ -9,6 +9,8 @@ import { useToast } from '../context/ToastContext.jsx';
 import { formatoPrecio, formatoFecha, paisMostrar } from '../utils/format.js';
 import { EstadoBadge } from '../components/EstadoBadge.jsx';
 
+const COLUMNAS_RECIENTES = ['N° pedido', 'Empresa', 'País', 'Fecha', 'Precio', 'Estado'];
+
 export default function Dashboard() {
   const [resumen, setResumen] = useState(null);
   const [recientes, setRecientes] = useState([]);
@@ -87,8 +89,8 @@ export default function Dashboard() {
             {cargando ? (
               [...Array(4)].map((_, i) => (
                 <tr key={i}>
-                  {[...Array(6)].map((__, j) => (
-                    <td key={j}><span className="skeleton" style={{ display: 'block', height: 16 }} /></td>
+                  {COLUMNAS_RECIENTES.map((label, j) => (
+                    <td key={j} data-label={label}><span className="skeleton" style={{ display: 'block', height: 16 }} /></td>
                   ))}
                 </tr>
               ))
@@ -105,12 +107,12 @@ export default function Dashboard() {
             ) : (
               recientes.map((p) => (
                 <tr key={p.id} style={{ cursor: 'pointer' }} onClick={() => navigate('/pedidos')}>
-                  <td className="mono">{p.numero_pedido}</td>
-                  <td>{p.empresa}</td>
-                  <td>{paisMostrar(p)}</td>
-                  <td>{formatoFecha(p.fecha_compra)}</td>
-                  <td className="num mono">{formatoPrecio(p.precio_total, p.moneda)}</td>
-                  <td><EstadoBadge estado={p.estado} /></td>
+                  <td data-label="N° pedido" className="mono">{p.numero_pedido}</td>
+                  <td data-label="Empresa">{p.empresa}</td>
+                  <td data-label="País">{paisMostrar(p)}</td>
+                  <td data-label="Fecha">{formatoFecha(p.fecha_compra)}</td>
+                  <td data-label="Precio" className="num mono">{formatoPrecio(p.precio_total, p.moneda)}</td>
+                  <td data-label="Estado"><EstadoBadge estado={p.estado} /></td>
                 </tr>
               ))
             )}

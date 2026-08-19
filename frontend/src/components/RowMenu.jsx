@@ -66,8 +66,7 @@ export function RowMenu({ items }) {
     <div className="menu">
       <button
         ref={btnRef}
-        className="icon-btn"
-        style={{ width: 34, height: 34 }}
+        className="icon-btn menu-trigger"
         onClick={() => setAbierto((v) => !v)}
         aria-label="Acciones"
       >

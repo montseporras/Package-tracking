@@ -268,8 +268,8 @@ export default function Pedidos() {
             {cargando ? (
               [...Array(6)].map((_, i) => (
                 <tr key={i}>
-                  {COLUMNAS.map((__, j) => (
-                    <td key={j}><span className="skeleton" style={{ display: 'block', height: 16 }} /></td>
+                  {COLUMNAS.map((c, j) => (
+                    <td key={j} data-label={c.label}><span className="skeleton" style={{ display: 'block', height: 16 }} /></td>
                   ))}
                 </tr>
               ))
@@ -286,19 +286,19 @@ export default function Pedidos() {
             ) : (
               pedidos.map((p) => (
                 <tr key={p.id}>
-                  <td className="mono" style={{ cursor: 'pointer' }} onClick={() => setDetalleId(p.id)}>{p.numero_pedido}</td>
-                  <td>{p.empresa}</td>
-                  <td>{paisMostrar(p)}</td>
-                  <td>{p.proveedor}</td>
-                  <td>{formatoFecha(p.fecha_compra)}</td>
-                  <td className="num mono">{formatoPrecio(p.precio_total, p.moneda)}</td>
-                  <td>
+                  <td data-label="N° pedido" className="mono" style={{ cursor: 'pointer' }} onClick={() => setDetalleId(p.id)}>{p.numero_pedido}</td>
+                  <td data-label="Empresa">{p.empresa}</td>
+                  <td data-label="País">{paisMostrar(p)}</td>
+                  <td data-label="Proveedor">{p.proveedor}</td>
+                  <td data-label="Fecha">{formatoFecha(p.fecha_compra)}</td>
+                  <td data-label="Precio" className="num mono">{formatoPrecio(p.precio_total, p.moneda)}</td>
+                  <td data-label="Estado">
                     <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
                       <EstadoBadge estado={p.estado} />
                       {Boolean(p.tiene_dj) && <span className="badge badge--dj">DJ</span>}
                     </div>
                   </td>
-                  <td>
+                  <td data-label="" className="td-actions">
                     <div className="row-actions">
                       <RowMenu
                         items={[
